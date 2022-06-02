@@ -1,0 +1,40 @@
+import React from "react"
+
+const OutputWindow = ({ outputDetails }) => {
+    const getOutput = () => {
+        let statusId = outputDetails?.status?.id;
+
+        if(statusId === 6) {
+            // compilation error
+            return (
+                // atob - decoding
+                <pre> { atob(outputDetails?.compile_output) } </pre>
+            );
+        }
+        else if(statusId === 3) {
+            return (
+                <pre> { atob(outputDetails.stdout) !== null ? `${atob(outputDetails.stdout)}` : null } </pre>
+            );
+        }
+        else if(statusId === 5) {
+            return (
+                <pre> { `Time limit exceeded! ` } </pre>
+            );
+        }
+        else {
+            return (
+                <pre> { atob(outputDetails?.stderr) } </pre>
+            );
+        }
+    };
+
+    return (
+        <>
+            <h2> Output </h2>
+            <div> {outputDetails ? <> {getOutput()} </> : null} </div>
+        </>
+    );
+};
+
+
+export default OutputWindow;
