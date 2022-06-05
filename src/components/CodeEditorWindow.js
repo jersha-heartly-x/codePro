@@ -15,11 +15,16 @@ const CodeEditorWindow = ({ onChange, language, code, theme }) => {
     <div >
       <Editor
         height="85vh"
+        borderRadius="0 0 7px 7px"
         width={`100%`}
         language={language || "javascript"}
         value={value}
+        options={{
+          minimap: {
+            enabled: false,
+          },
+        }}
         theme={theme}
-        defaultValue="// some comment"
         onChange={handleEditorChange}
       />
     </div>

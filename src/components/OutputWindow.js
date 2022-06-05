@@ -1,5 +1,7 @@
 import React from "react"
 
+
+
 const OutputWindow = ({ outputDetails }) => {
     const getOutput = () => {
         let statusId = outputDetails?.status?.id;
@@ -8,30 +10,29 @@ const OutputWindow = ({ outputDetails }) => {
             // compilation error
             return (
                 // atob - decoding
-                <pre> { atob(outputDetails?.compile_output) } </pre>
+                <p>{atob(outputDetails?.compile_output) }</p>
             );
         }
         else if(statusId === 3) {
             return (
-                <pre> { atob(outputDetails.stdout) !== null ? `${atob(outputDetails.stdout)}` : null } </pre>
+                <pre>{atob(outputDetails.stdout) !== null ? `${atob(outputDetails.stdout)}` : null }</pre>
             );
         }
         else if(statusId === 5) {
             return (
-                <pre> { `Time limit exceeded! ` } </pre>
+                <pre>{`Time limit exceeded!`}</pre>
             );
         }
         else {
             return (
-                <pre> { atob(outputDetails?.stderr) } </pre>
+                <pre>{ atob(outputDetails?.stderr) }</pre>
             );
         }
     };
 
     return (
         <>
-            <h2> Output </h2>
-            <div> {outputDetails ? <> {getOutput()} </> : null} </div>
+            <div>{outputDetails ? <>{getOutput()}</> : null}</div>
         </>
     );
 };

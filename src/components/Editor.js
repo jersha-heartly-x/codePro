@@ -13,14 +13,14 @@ import CustomInput from './CustomInput';
 import OutputDetails from './OutputDetails';
 import './Editor.css';
 
-const defaultComment = `// code here`;
+const intial = ``;
 
 const Editor = () => {
-    const [code, setCode] = useState(defaultComment);
+    const [code, setCode] = useState(intial);
     const [customInput, setCustomInput] = useState("");
     const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(null);
-    const [theme, setTheme] = useState("cobalt");
+    const [theme, setTheme] = useState("dracula");
     const [language, setLanguage] = useState(languages[0]);
 
     const enterPress = useKeyPress("Enter");
@@ -32,25 +32,31 @@ const Editor = () => {
     };
 
     useEffect(() => {
-        if(enterPress && ctrlPress) {
+        if (enterPress && ctrlPress) {
             console.log("Enter press ", enterPress);
             console.log("Control press ", ctrlPress);
             handleCompile();
         }
     }, [ctrlPress, enterPress]);
 
-    const handleThemeChange = ( theme ) => {
-        console.log("Selected Theme: ", theme);
-        if(["light", "vs-dark"].includes(theme.value)) {
-            setTheme(theme);   
-        }
+    function handleThemeChange(th) {
+        const theme = th;
+        console.log("Theme: ", theme);
+    
+        if (["light", "vs-dark"].includes(theme.value)) {
+          setTheme(theme);
+        } 
         else {
-            defineTheme(theme.value).then((_) => setTheme(theme));
+          defineTheme(theme.value).then((_) => setTheme(theme));
         }
-    };
+    }
+    useEffect(() => {
+        defineTheme("dracula").then((_) =>
+        setTheme({ value: "dracula", label: "Dracula" }));
+    }, []);
 
     const onChange = (action, data) => {
-        switch(action) {
+        switch (action) {
             case "code": {
                 setCode(data);
                 break;
@@ -93,7 +99,7 @@ const Editor = () => {
                 let error = err.response ? err.response.data : err;
                 let status = err.response.status;
                 console.log("Status: ", status);
-                if(status === 429) {
+                if (status === 429) {
                     console.log("Too many requests ", status);
                     showErrorToast(
                         `Quota of 100 requests exceeded for the Day!`, 10000
@@ -104,7 +110,7 @@ const Editor = () => {
             });
     };
 
-    const checkStatus = async(token) => {
+    const checkStatus = async (token) => {
         const options = {
             method: "GET",
             url: process.env.REACT_APP_RAPID_API_URL + "/" + token,
@@ -114,12 +120,12 @@ const Editor = () => {
                 "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
             },
         };
-        
+
         try {
             let response = await axios.request(options);
             let statusId = response.data.status?.id;
 
-            if(statusId === 1 || statusId === 2) {
+            if (statusId === 1 || statusId === 2) {
                 setTimeout(() => {
                     checkStatus(token);
                 }, 2000);
@@ -137,7 +143,7 @@ const Editor = () => {
             console.log("Error: ", err);
             setProcessing(false);
             //showErrorToast();
-        }   
+        }
     };
 
     const showSuccessToast = (msg) => {
@@ -162,53 +168,66 @@ const Editor = () => {
             draggable: true,
             progress: undefined,
         });
-    };
+    }; 
 
-    return(
-        <>
-            <div>
-                <h2>codePro</h2>
+    return (
+        <div className='background'>
+            <div className='top'>
+                <h2 className='name'>code<b>Pro</b></h2>
+                <div className='grad-border'>
+                    <ThemesDropdown handleThemeChange={handleThemeChange} theme={theme} />
+                </div>
             </div>
-            <ToastContainer 
-                position='top-right' 
-                autoClose={2500} 
-                hideProgressBar={false} 
-                newestOnTop={true} 
-                closeOnClick rtl={false} 
-                pauseOnFocusLoss 
-                draggable 
+            <ToastContainer
+                position='top-right'
+                autoClose={2500}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick rtl={false}
+                pauseOnFocusLoss
+                draggable
                 pauseOnHover
             />
+            <div className='main'>
+                <div className='editor-window'>
+                    <div className='editor-nav'>
+                        <div className='grad-border'>
+                            <LanguagesDropdown onSelectChange={onSelectChange} />
+                        </div>
+                        <button className='run-btn'
+                            onClick={handleCompile}
+                            disabled = { !code }
+                        >
+                            {processing ? <div style={{ width: "18px", height: "18px" }} class="spinner-border text-light" role="status">
+                                <span class="sr-only"></span>
+                            </div> : "RUN"}
+                        </button>
+                    </div>
+                    <div>
+                        <CodeEditorWindow
+                            code={code}
+                            onChange={onChange}
+                            language={language?.value}
+                            theme={theme.value}
+                        />
+                    </div>
+                </div>
+                <div className='io'>
+                    <div className='input'>
+                        <CustomInput customInput={customInput} setCustomInput={setCustomInput} />
+                    </div>
+                    <div className='output-scr'>
+                        Output
+                        <div className='output-window'>
+                            <OutputWindow outputDetails={outputDetails} />
+                            {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div>
-                <div>
-                    <LanguagesDropdown onSelectChange = { onSelectChange } />
-                </div>
-                <div>
-                    <ThemesDropdown handleThemeChange = { handleThemeChange } theme = { theme } />
-                </div>
             </div>
-            <div className='editor'>
-                <CodeEditorWindow 
-                    code = { code } 
-                    onChange = { onChange }
-                    language = { language?.value }
-                    theme = { theme.value }
-                />
-            </div>
-            <div>
-                <OutputWindow outputDetails = { outputDetails } />
-                <div>
-                    <CustomInput customInput = { customInput } setCustomInput = { setCustomInput }/>
-                    <button
-                        onClick = { handleCompile }
-                        // disabled = { !code }
-                    >
-                    { processing ? "Processing..." : "Compile and Execute" }
-                    </button>
-                </div>
-                { outputDetails && <OutputDetails outputDetails = { outputDetails } />}
-            </div>
-        </>
+        </div>
     );
 }
 

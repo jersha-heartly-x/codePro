@@ -1,15 +1,14 @@
 import React from "react";
 import Editor from './Editor';
-import FrontPage from './FrontPage';
-
+import Landing from './Landing';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<FrontPage/>}/>
-        <Route path="/editor" element={<Editor/>}/>
+        <Route exact path="/" element={<Landing/>}/>
+        <Route exact path="/editor" element={<Editor/>}/>
       </Routes>
     </Router>
   );
