@@ -18,6 +18,13 @@
     align-items: center;
 }
 
+.top-right {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
 .editor-nav {
     border-radius: 7px 7px 0 0 ;
     padding: 10px 20px;
@@ -92,3 +99,16 @@
     border-radius: 10px;
     background-color: rgb(162, 162, 162); 
 }
+
+.signout-btn {
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
+    border-radius: 30px;
+    border: solid 3px transparent;
+    background: linear-gradient(90deg, rgba(72, 63, 255, 1) 0%, rgba(88, 13, 239, 1) 25%, rgba(119, 21, 237, 1) 52%, rgba(173, 32, 235, 1) 74%, rgba(229, 43, 232, 1) 100%);
+    background-origin: border-box;
+}
+

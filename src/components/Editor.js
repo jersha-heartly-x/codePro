@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from "react-toastify"
 import axios from 'axios';
 
@@ -13,6 +13,11 @@ import CustomInput from './CustomInput';
 import OutputDetails from './OutputDetails';
 import './Editor.css';
 
+import { Navigate, Link } from 'react-router-dom';
+import { AuthContext } from "./Auth";
+import firebaseConfig from "../config.js";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 const intial = ``;
 
 const Editor = () => {
@@ -20,7 +25,7 @@ const Editor = () => {
     const [customInput, setCustomInput] = useState("");
     const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(null);
-    const [theme, setTheme] = useState("dracula");
+    const [theme, setTheme] = useState("clouds-midnight");
     const [language, setLanguage] = useState(languages[0]);
 
     const enterPress = useKeyPress("Enter");
@@ -51,8 +56,8 @@ const Editor = () => {
         }
     }
     useEffect(() => {
-        defineTheme("dracula").then((_) =>
-        setTheme({ value: "dracula", label: "Dracula" }));
+        defineTheme("clouds-midnight").then((_) =>
+        setTheme({ value: "clouds-midnight", label: "Clouds Midnight" }));
     }, []);
 
     const onChange = (action, data) => {
@@ -170,12 +175,29 @@ const Editor = () => {
         });
     }; 
 
+    const signOutUser = () => {
+        firebaseConfig.auth().signOut().then(function() {
+            console.log('signed out');
+
+        }).catch(function(error) {
+        // An error happened.
+        });
+    };
+
+    const { currentUser } = useContext(AuthContext);
+    if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
+
     return (
         <div className='background'>
             <div className='top'>
-                <h2 className='name'>code<b>Pro</b></h2>
-                <div className='grad-border'>
-                    <ThemesDropdown handleThemeChange={handleThemeChange} theme={theme} />
+                <div><Link to={`/`} style={{ textDecoration: 'none' }}><h1 className="name">code<b>Pro</b></h1></Link></div>
+                <div className='top-right'>
+                    <div className='grad-border'>
+                        <ThemesDropdown handleThemeChange={handleThemeChange} theme={theme} />
+                    </div>
+                    <button onClick={ signOutUser } className='signout-btn'>Sign out</button>
                 </div>
             </div>
             <ToastContainer
