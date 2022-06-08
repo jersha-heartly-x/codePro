@@ -12,11 +12,12 @@ import OutputWindow from './OutputWindow';
 import CustomInput from './CustomInput';
 import OutputDetails from './OutputDetails';
 import './Editor.css';
-
+import 'react-toastify/dist/ReactToastify.css';
 import { Navigate, Link } from 'react-router-dom';
 import { AuthContext } from "./Auth";
 import firebaseConfig from "../config.js";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UserDropdown from './UserDropdown';
+
 
 const intial = ``;
 
@@ -31,11 +32,6 @@ const Editor = () => {
     const enterPress = useKeyPress("Enter");
     const ctrlPress = useKeyPress("Control");
 
-    const onSelectChange = (selectedLang) => {
-        console.log("Selected Language: ", selectedLang);
-        setLanguage(selectedLang);
-    };
-
     useEffect(() => {
         if (enterPress && ctrlPress) {
             console.log("Enter press ", enterPress);
@@ -43,6 +39,11 @@ const Editor = () => {
             handleCompile();
         }
     }, [ctrlPress, enterPress]);
+
+    const onSelectChange = (selectedLang) => {
+        console.log("Selected Language: ", selectedLang);
+        setLanguage(selectedLang);
+    };
 
     function handleThemeChange(th) {
         const theme = th;
@@ -73,7 +74,7 @@ const Editor = () => {
     };
 
     const handleCompile = () => {
-        console.log(code);
+        //console.log(code);
         setProcessing(true);
         const formData = {
             language_id: language.id,
@@ -139,7 +140,13 @@ const Editor = () => {
             else {
                 setProcessing(false);
                 setOutputDetails(response.data);
-                //showSuccessToast(`Compiled Successfully!`);
+                console.log("Response: ", response.data);
+                if(response.data.status_id === 6)
+                    showErrorToast(`Compilation Error!`);
+                else if(response.data.status_id === 11)
+                    showErrorToast(`Runtime Error!`);
+                else
+                    showSuccessToast(`Compiled Successfully!`);
                 console.log("Response data ", response.data);
                 return;
             }
@@ -147,13 +154,13 @@ const Editor = () => {
         catch (err) {
             console.log("Error: ", err);
             setProcessing(false);
-            //showErrorToast();
+            showErrorToast();
         }
     };
 
     const showSuccessToast = (msg) => {
         toast.success(msg || `Compiled Successfully!`, {
-            position: "top-right",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -165,7 +172,7 @@ const Editor = () => {
 
     const showErrorToast = (msg, timer) => {
         toast.error(msg || `Something went wrong! Please try again.`, {
-            position: "top-right",
+            position: "top-center",
             autoClose: timer ? timer : 1000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -174,15 +181,6 @@ const Editor = () => {
             progress: undefined,
         });
     }; 
-
-    const signOutUser = () => {
-        firebaseConfig.auth().signOut().then(function() {
-            console.log('signed out');
-
-        }).catch(function(error) {
-        // An error happened.
-        });
-    };
 
     const { currentUser } = useContext(AuthContext);
     if (!currentUser) {
@@ -194,18 +192,19 @@ const Editor = () => {
             <div className='top'>
                 <div><Link to={`/`} style={{ textDecoration: 'none' }}><h1 className="name">code<b>Pro</b></h1></Link></div>
                 <div className='top-right'>
-                    <div className='grad-border'>
+                    <div className='grad-border theme-button'>
                         <ThemesDropdown handleThemeChange={handleThemeChange} theme={theme} />
                     </div>
-                    <button onClick={ signOutUser } className='signout-btn'>Sign out</button>
+                    <UserDropdown />
                 </div>
             </div>
             <ToastContainer
-                position='top-right'
+                position='top-center'
                 autoClose={2500}
                 hideProgressBar={false}
                 newestOnTop={true}
                 closeOnClick rtl={false}
+                theme='dark'
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover

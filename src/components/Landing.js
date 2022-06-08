@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import Typewriter from "typewriter-effect"
 import CountUp from 'react-countup'
@@ -8,19 +8,41 @@ import editor from '../images/editor.png'
 import language from '../images/language.png'
 import theme from '../images/themes.png'
 import { languages } from '../data/languages'
+import { AuthContext } from "./Auth"
+import firebaseConfig from "../config.js"
+import Profile from "./Profile"
 
 const Landing = () => {
     let languagesArr = languages.map(language => language.value);
     languagesArr = [...new Set(languagesArr)];
 
+    const signOutUser = () => {
+        firebaseConfig.auth().signOut().then(function() {
+            console.log('signed out');
+        }).catch(function(error) {
+        // An error happened.
+        });
+    };
+
+    const { currentUser } = useContext(AuthContext);
+
     return (
         <div className="bg_">
             <div className="start-div">
                 <div><Link to={`/`} style={{ textDecoration: 'none' }}><h1 className="title">code<b>Pro</b></h1></Link></div>
-                <nav>
-                    <Link className="login-btn" to={`/login`}>Log In</Link>
-                    <Link className="signup-btn" to={`/signup`}>Sign Up</Link>
-                </nav>
+                <div className="nav">
+                    {!currentUser ? (
+                        <>
+                            <div className="login-btn"><Link className="login-btn-link" to={`/login`}>Log In</Link></div>
+                            <div className="signup-btn"><Link className="signup-btn-link" to={`/signup`}>Sign Up</Link></div>
+                        </>
+                    ) : (
+                        <>
+                            <Profile />
+                            <div><button onClick={signOutUser} className="signout-btn-link">Sign out</button></div>
+                        </>
+                    )}
+                </div>
             </div>
             <div className="start-div">
                 <div className="first-div">
@@ -35,9 +57,22 @@ const Landing = () => {
                 </div>
             </div>
             <div className="middle-div">
-                <div className="first-div">
-                    <img src={language} alt="Languages" className="languages-img"></img>
+                <div className="second-div">
+                    <img src={theme} alt="Themes" className="themes-img"></img>
                 </div>
+                <div className="last-div">
+                    <h1 className="quote">Code in style <span className="normal">with</span></h1>
+                    <h1 className="quote">
+                        <CountUp start={0} end={50} enableScrollSpy={true} duration={2} useEasing={true}>
+                            {({ countUpRef }) => (
+                                <span className="bold" ref={countUpRef} />
+                            )}
+                        </CountUp>
+                        + themes
+                    </h1>
+                </div>
+            </div>
+            <div className="end-div">
                 <div className="second-div">
                     <h1 className="text">support for</h1>
                     <h1 className="bold-lang">multiple languages</h1>
@@ -53,21 +88,8 @@ const Landing = () => {
                         />
                     </span>
                 </div>
-            </div>
-            <div className="end-div">
-                <div className="last-div">
-                    <h1 className="quote">Code in style <span className="normal">with</span></h1>
-                    <h1 className="quote">
-                        <CountUp start={0} end={50} enableScrollSpy={true} duration={2} useEasing={true}>
-                            {({ countUpRef }) => (
-                                <span className="bold" ref={countUpRef} />
-                            )}
-                        </CountUp>
-                        + themes
-                    </h1>
-                </div>
-                <div className="second-div">
-                    <img src={theme} alt="Themes" className="themes-img"></img>
+                <div className="">
+                    <img src={language} alt="Languages" className="languages-img"></img>
                 </div>
             </div>
         </div>

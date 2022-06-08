@@ -5,7 +5,7 @@ import "firebase/compat/auth";
 function Profile() {
     const user = firebase.auth().currentUser;
   return (
-    <div style={{color: 'white'}}>{user.email}</div>
+    <div style={{fontSize : '.8rem', color: 'white'}}>{user.email}</div>
   )
 }
 

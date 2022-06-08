@@ -7,13 +7,13 @@ import "firebase/compat/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = firebase.initializeApp({
-  apiKey: "AIzaSyA8KVGDW7shiWHY4FLOo_04eMSIUWWsBDM",
-  authDomain: "code-editor-auth.firebaseapp.com",
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   projectId: "code-editor-auth",
   storageBucket: "code-editor-auth.appspot.com",
-  messagingSenderId: "479857647688",
-  appId: "1:479857647688:web:c211b97519330db9ad387d",
-  measurementId: "G-6LRG1FSN5Z"
+  messagingSenderId: process.env.FIREBASE_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 });
 
 export default firebaseConfig;
