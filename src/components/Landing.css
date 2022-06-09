@@ -173,3 +173,17 @@
     height: 700px;
     margin: 100px 0px 100px 0;
 }
+
+.footer-title {
+    background: rgb(72,63,255);
+    background: -moz-linear-gradient(90deg, rgba(72,63,255,1) 8%, rgba(88,13,239,1) 12%, rgba(119,21,237,1) 15%, rgba(173,32,235,1) 18%, rgba(229,43,232,1) 22%);
+    background: -webkit-linear-gradient(90deg, rgba(72,63,255,1) 8%, rgba(88,13,239,1) 12%, rgba(119,21,237,1) 15%, rgba(173,32,235,1) 18%, rgba(229,43,232,1) 22%);
+    background: linear-gradient(90deg, rgba(72,63,255,1) 8%, rgba(88,13,239,1) 12%, rgba(119,21,237,1) 15%, rgba(173,32,235,1) 18%, rgba(229,43,232,1) 22%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#483fff",endColorstr="#e52be8",GradientType=1);
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+    font-size: 40px;
+}

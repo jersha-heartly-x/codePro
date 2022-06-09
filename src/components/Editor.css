@@ -41,7 +41,7 @@
     border-radius: 25px;
 }
 
-.theme-button{
+.theme-button {
     margin-left: 120px;
 }
 
@@ -123,13 +123,17 @@
     margin : 10px 0 10px 30px;
 }
 
+.info-icon {
+    width: 25px;
+    margin-left: 10px;
+}
+
 .dropdown {
     width: 60px;
     height: 50px;
     position: relative;
     display: inline-block;  
 }
-
 
 .dropdown:hover .dropdown-content{
     display: flex;
@@ -152,4 +156,11 @@
 
 .dropdown-content:first-child{
     margin: 20px;
+}
+
+.modify {
+    top: 30px;
+    right: auto;
+    padding: 30px 30px 0 30px;
+    min-width: 200px;
 }

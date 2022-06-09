@@ -11,6 +11,7 @@ import { languages } from '../data/languages'
 import { AuthContext } from "./Auth"
 import firebaseConfig from "../config.js"
 import Profile from "./Profile"
+import Footer from './Footer'
 
 const Landing = () => {
     let languagesArr = languages.map(language => language.value);
@@ -92,6 +93,7 @@ const Landing = () => {
                     <img src={language} alt="Languages" className="languages-img"></img>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
