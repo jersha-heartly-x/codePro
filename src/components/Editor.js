@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from "react-toastify"
 import axios from 'axios';
 
@@ -10,26 +10,26 @@ import ThemesDropdown from './ThemesDropdown';
 import { defineTheme } from '../lib/defineTheme';
 import OutputWindow from './OutputWindow';
 import CustomInput from './CustomInput';
-import OutputDetails from './OutputDetails';
 import './Editor.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { Navigate, Link } from 'react-router-dom';
+import { AuthContext } from "./Auth";
+import UserDropdown from './UserDropdown';
+import InfoIcon from '../images/info.png'
+import OutputDetails from './OutputDetails'
 
 const intial = ``;
 
 const Editor = () => {
     const [code, setCode] = useState(intial);
     const [customInput, setCustomInput] = useState("");
-    const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(null);
-    const [theme, setTheme] = useState("dracula");
+    const [theme, setTheme] = useState("clouds-midnight");
     const [language, setLanguage] = useState(languages[0]);
+    const [outputDetails, setOutputDetails] = useState(null);
 
     const enterPress = useKeyPress("Enter");
     const ctrlPress = useKeyPress("Control");
-
-    const onSelectChange = (selectedLang) => {
-        console.log("Selected Language: ", selectedLang);
-        setLanguage(selectedLang);
-    };
 
     useEffect(() => {
         if (enterPress && ctrlPress) {
@@ -39,20 +39,25 @@ const Editor = () => {
         }
     }, [ctrlPress, enterPress]);
 
+    const onSelectChange = (selectedLang) => {
+        console.log("Selected Language: ", selectedLang);
+        setLanguage(selectedLang);
+    };
+
     function handleThemeChange(th) {
         const theme = th;
         console.log("Theme: ", theme);
-    
+
         if (["light", "vs-dark"].includes(theme.value)) {
-          setTheme(theme);
-        } 
+            setTheme(theme);
+        }
         else {
-          defineTheme(theme.value).then((_) => setTheme(theme));
+            defineTheme(theme.value).then((_) => setTheme(theme));
         }
     }
     useEffect(() => {
-        defineTheme("dracula").then((_) =>
-        setTheme({ value: "dracula", label: "Dracula" }));
+        defineTheme("clouds-midnight").then((_) =>
+            setTheme({ value: "clouds-midnight", label: "Clouds Midnight" }));
     }, []);
 
     const onChange = (action, data) => {
@@ -68,7 +73,7 @@ const Editor = () => {
     };
 
     const handleCompile = () => {
-        console.log(code);
+        //console.log(code);
         setProcessing(true);
         const formData = {
             language_id: language.id,
@@ -134,7 +139,12 @@ const Editor = () => {
             else {
                 setProcessing(false);
                 setOutputDetails(response.data);
-                //showSuccessToast(`Compiled Successfully!`);
+                if (response.data.status_id === 6)
+                    showErrorToast(`Compilation Error!`);
+                else if (response.data.status_id === 11)
+                    showErrorToast(`Runtime Error!`);
+                else
+                    showSuccessToast(`Compiled Successfully!`);
                 console.log("Response data ", response.data);
                 return;
             }
@@ -142,13 +152,13 @@ const Editor = () => {
         catch (err) {
             console.log("Error: ", err);
             setProcessing(false);
-            //showErrorToast();
+            showErrorToast();
         }
     };
 
     const showSuccessToast = (msg) => {
         toast.success(msg || `Compiled Successfully!`, {
-            position: "top-right",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -160,7 +170,7 @@ const Editor = () => {
 
     const showErrorToast = (msg, timer) => {
         toast.error(msg || `Something went wrong! Please try again.`, {
-            position: "top-right",
+            position: "top-center",
             autoClose: timer ? timer : 1000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -168,26 +178,35 @@ const Editor = () => {
             draggable: true,
             progress: undefined,
         });
-    }; 
+    };
+
+    const { currentUser } = useContext(AuthContext);
+    if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
 
     return (
         <div className='background'>
-            <div className='top'>
-                <h2 className='name'>code<b>Pro</b></h2>
-                <div className='grad-border'>
-                    <ThemesDropdown handleThemeChange={handleThemeChange} theme={theme} />
-                </div>
-            </div>
             <ToastContainer
-                position='top-right'
+                position='top-center'
                 autoClose={2500}
                 hideProgressBar={false}
                 newestOnTop={true}
                 closeOnClick rtl={false}
+                theme='dark'
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
             />
+            <div className='top'>
+                <div><Link to={`/`} style={{ textDecoration: 'none' }}><h1 className="name">code<b>Pro</b></h1></Link></div>
+                <div className='top-right'>
+                    <div className='grad-border theme-button'>
+                        <ThemesDropdown handleThemeChange={handleThemeChange} theme={theme} />
+                    </div>
+                    <UserDropdown />
+                </div>
+            </div>
             <div className='main'>
                 <div className='editor-window'>
                     <div className='editor-nav'>
@@ -196,7 +215,7 @@ const Editor = () => {
                         </div>
                         <button className='run-btn'
                             onClick={handleCompile}
-                            disabled = { !code }
+                            disabled={!code}
                         >
                             {processing ? <div style={{ width: "18px", height: "18px" }} class="spinner-border text-light" role="status">
                                 <span class="sr-only"></span>
@@ -217,10 +236,15 @@ const Editor = () => {
                         <CustomInput customInput={customInput} setCustomInput={setCustomInput} />
                     </div>
                     <div className='output-scr'>
-                        Output
+                        Output 
+                        <div className='dropdown'>
+                            <img src={InfoIcon} className='info-icon'></img>
+                            <div className='dropdown-content modify'>
+                                <p >{<OutputDetails outputDetails={outputDetails} />}</p>
+                            </div>
+                        </div>
                         <div className='output-window'>
                             <OutputWindow outputDetails={outputDetails} />
-                            {outputDetails && <OutputDetails outputDetails={outputDetails} />}
                         </div>
                     </div>
                 </div>

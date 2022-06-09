@@ -18,8 +18,15 @@
     align-items: center;
 }
 
+.top-right {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .editor-nav {
-    border-radius: 7px 7px 0 0 ;
+    border-radius: 7px 7px 0 0;
     padding: 10px 20px;
     background-color: #1f1f1f;
 }
@@ -32,6 +39,10 @@
     background: linear-gradient(90deg, rgba(13, 0, 241, 1) 0%, rgba(229, 43, 232, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0d00f1", endColorstr="#e52be8", GradientType=1);
     border-radius: 25px;
+}
+
+.theme-button {
+    margin-left: 120px;
 }
 
 .run-btn {
@@ -59,6 +70,7 @@
 .io {
     font-size: 0.9em;
 }
+
 .editor-window {
     width: 65%;
 }
@@ -84,11 +96,71 @@
 }
 
 .output-window::-webkit-scrollbar-track {
-    background-color:#1f1f1f; 
+    background-color: #1f1f1f;
     border-radius: 10px;
 }
 
 .output-window::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: rgb(162, 162, 162); 
+    background-color: rgb(162, 162, 162);
+}
+
+.signout-btn {
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: .8rem;
+    margin: 20px;
+    padding: 0.3rem 1.5rem;
+    border-radius: 30px;
+    border: solid 3px transparent;
+    background: linear-gradient(90deg, rgba(72, 63, 255, 1) 0%, rgba(88, 13, 239, 1) 25%, rgba(119, 21, 237, 1) 52%, rgba(173, 32, 235, 1) 74%, rgba(229, 43, 232, 1) 100%);
+    background-origin: border-box;
+}
+
+.user-circle {
+    width: 30px;
+    margin : 10px 0 10px 30px;
+}
+
+.info-icon {
+    width: 25px;
+    margin-left: 10px;
+}
+
+.dropdown {
+    width: 60px;
+    height: 50px;
+    position: relative;
+    display: inline-block;  
+}
+
+.dropdown:hover .dropdown-content{
+    display: flex;
+}
+
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    background-color: #272727;
+    border-radius: 7px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(40, 40, 40, 0.2);
+    padding: 22px 16px 5px 16px;
+    z-index: 1;
+    top: 53px;
+    right: 0;
+}
+
+.dropdown-content:first-child{
+    margin: 20px;
+}
+
+.modify {
+    top: 30px;
+    right: auto;
+    padding: 30px 30px 0 30px;
+    min-width: 200px;
 }

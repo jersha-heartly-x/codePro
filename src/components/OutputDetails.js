@@ -1,6 +1,7 @@
 import React from "react";
 
 const OutputDetails = ({ outputDetails }) => {
+    return(
     <div>
         <p>
             Status: { " " }
@@ -17,6 +18,7 @@ const OutputDetails = ({ outputDetails }) => {
             <span> { outputDetails?.time } </span>
         </p>
     </div>
+    );
 };
 
 export default OutputDetails;
