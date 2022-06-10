@@ -187,3 +187,8 @@
     font-weight: 700;
     font-size: 40px;
 }
+
+.mail-link:hover {
+    color: white;
+    font-weight: bold;
+}

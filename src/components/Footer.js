@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom"
 
 const Footer = () => {
+
   return (
     <div style={{padding: '20px 0', backgroundColor: '#282A36', marginTop: '150px'}}>
       <h3 className="title footer-title">
@@ -10,7 +10,7 @@ const Footer = () => {
       </h3>
 
       <div style={{display: 'flex', justifyContent: 'space-between', padding: '20px 0', margin: '0 100px', borderBottom: '2px solid #bfbfbf',}}>
-        <div><Link to={`/about`} style={{ textDecoration: 'none' }}><p className="name">About Us</p></Link></div>
+        <div><Link to={`/about`} style={{textDecoration: 'none'}} className="name mail-link">About Us</Link></div>
         <div style={{width: '220px'}}>
             Contact us at<br /><br />
             <a className="mail-link" style={{textDecoration: 'None', color: 'white'}} href="mailto:jershaxavier@gmail.com">jershaxavier@gmail.com</a><br />
