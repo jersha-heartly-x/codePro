@@ -14,6 +14,7 @@ import Profile from "./Profile"
 import Footer from './Footer'
 
 const Landing = () => {
+
     let languagesArr = languages.map(language => language.value);
     languagesArr = [...new Set(languagesArr)];
 
